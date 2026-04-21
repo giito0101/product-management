@@ -1,0 +1,255 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserForm</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.giitotech.product_management.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: UserForm (com.giitotech.product_management.dto)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserForm</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/26)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.giitotech.product_management.dto;
+&nbsp;
+&nbsp;import com.giitotech.product_management.validation.CreateGroup;
+&nbsp;import com.giitotech.product_management.validation.EditGroup;
+&nbsp;import jakarta.validation.constraints.Email;
+&nbsp;import jakarta.validation.constraints.NotBlank;
+&nbsp;import jakarta.validation.constraints.Pattern;
+&nbsp;import jakarta.validation.constraints.Size;
+&nbsp;
+&nbsp;public class UserForm {
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    @Size(min = 2, max = 50, message = &quot;ユーザー名は2文字以上50文字以内で入力してください&quot;, groups = CreateGroup.class)
+&nbsp;    @Size(min = 2, max = 50, message = &quot;ユーザー名は2文字以上50文字以内で入力してください&quot;, groups = EditGroup.class)
+&nbsp;    @NotBlank(message = &quot;ユーザー名は必須です&quot;, groups = CreateGroup.class)
+&nbsp;    @NotBlank(message = &quot;ユーザー名は必須です&quot;, groups = EditGroup.class)
+&nbsp;    private String userName;
+&nbsp;
+&nbsp;    @Size(
+&nbsp;            groups = CreateGroup.class,
+&nbsp;            min = 8, max = 16, message = &quot;パスワードは8文字以上16文字以下で入力してください&quot;)
+&nbsp;    @NotBlank(
+&nbsp;            groups = CreateGroup.class,
+&nbsp;            message = &quot;パスワードは必須です&quot;)
+&nbsp;    @Pattern(
+&nbsp;            groups = CreateGroup.class,
+&nbsp;            regexp = &quot;^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&amp;*()_+=-])[A-Za-z\\d!@#$%^&amp;*()_+=-]{8,16}$&quot;,
+&nbsp;            message = &quot;パスワードは半角英数字と記号（!@#$%^&amp;*()_+=-）を含む必要があります&quot;
+&nbsp;    )
+&nbsp;    @Pattern(
+&nbsp;            groups = EditGroup.class,
+&nbsp;            regexp = &quot;^$|^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&amp;*()_+=-])[A-Za-z\\d!@#$%^&amp;*()_+=-]{8,16}$&quot;,
+&nbsp;            message = &quot;パスワードは空欄または、8〜16文字・英数字＋記号（!@#$%^&amp;*()_+=-）で入力してください&quot;
+&nbsp;    )
+&nbsp;    private String password;
+&nbsp;
+&nbsp;    @Size(min = 1, max = 30, message = &quot;名前は1文字以上30文字以下で入力してください&quot;, groups = CreateGroup.class)
+&nbsp;    @Size(min = 1, max = 30, message = &quot;名前は1文字以上30文字以下で入力してください&quot;, groups = EditGroup.class)
+&nbsp;    @NotBlank(message = &quot;名前は必須です&quot;, groups = CreateGroup.class)
+&nbsp;    @NotBlank(message = &quot;名前は必須です&quot;, groups = EditGroup.class)
+&nbsp;    private String firstName;
+&nbsp;
+&nbsp;    @Size(min = 1, max = 30, message = &quot;名字は1文字以上30文字以下で入力してください&quot;, groups = CreateGroup.class)
+&nbsp;    @Size(min = 1, max = 30, message = &quot;名字は1文字以上30文字以下で入力してください&quot;, groups = EditGroup.class)
+&nbsp;    @NotBlank(message = &quot;名字は必須です&quot;, groups = CreateGroup.class)
+&nbsp;    @NotBlank(message = &quot;名字は必須です&quot;, groups = EditGroup.class)
+&nbsp;    private String lastName;
+&nbsp;
+&nbsp;    private String roleName;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;役割は必須です&quot;, groups = CreateGroup.class)
+&nbsp;    @NotBlank(message = &quot;役割は必須です&quot;, groups = EditGroup.class)
+&nbsp;    private String roleDisplayName;
+&nbsp;
+&nbsp;    @Size(min = 3, max = 254, message = &quot;メールは3文字以上256文字以下で入力してください&quot;, groups = CreateGroup.class)
+&nbsp;    @Size(min = 3, max = 254, message = &quot;メールは3文字以上256文字以下で入力してください&quot;, groups = EditGroup.class)
+&nbsp;    @Email(message = &quot;メールアドレスの形式が正しくありません&quot;, groups = CreateGroup.class)
+&nbsp;    @Email(message = &quot;メールアドレスの形式が正しくありません&quot;, groups = EditGroup.class)
+&nbsp;    @NotBlank(message = &quot;メールアドレスは必須です&quot;, groups = CreateGroup.class)
+&nbsp;    @NotBlank(message = &quot;メールアドレスは必須です&quot;, groups = EditGroup.class)
+&nbsp;    private String email;
+&nbsp;
+&nbsp;    public UserForm(Long id,
+&nbsp;                    String userName,
+&nbsp;                    String firstName,
+&nbsp;                    String lastName,
+&nbsp;                    String roleName,
+&nbsp;                    String roleDisplayName,
+<b class="nc">&nbsp;                    String email) {</b>
+<b class="nc">&nbsp;        this.id = id;</b>
+<b class="nc">&nbsp;        this.userName = userName;</b>
+<b class="nc">&nbsp;        this.firstName = firstName;</b>
+<b class="nc">&nbsp;        this.lastName = lastName;</b>
+<b class="nc">&nbsp;        this.roleName = roleName;</b>
+<b class="nc">&nbsp;        this.roleDisplayName = roleDisplayName;</b>
+<b class="nc">&nbsp;        this.email = email;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public UserForm() {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Long getId() {
+<b class="nc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setId(Long id) {
+<b class="nc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getUserName() {
+<b class="nc">&nbsp;        return userName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setUserName(String userName) {
+<b class="nc">&nbsp;        this.userName = userName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getPassword() {
+<b class="nc">&nbsp;        return password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPassword(String password) {
+<b class="nc">&nbsp;        this.password = password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getFirstName() {
+<b class="nc">&nbsp;        return firstName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setFirstName(String firstName) {
+<b class="nc">&nbsp;        this.firstName = firstName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getLastName() {
+<b class="nc">&nbsp;        return lastName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setLastName(String lastName) {
+<b class="nc">&nbsp;        this.lastName = lastName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getRoleName() {
+<b class="nc">&nbsp;        return roleName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setRoleName(String roleName) {
+<b class="nc">&nbsp;        this.roleName = roleName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getRoleDisplayName() {
+<b class="nc">&nbsp;        return roleDisplayName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setRoleDisplayName(String roleDisplayName) {
+<b class="nc">&nbsp;        this.roleDisplayName = roleDisplayName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getEmail() {
+<b class="nc">&nbsp;        return email;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setEmail(String email) {
+<b class="nc">&nbsp;        this.email = email;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;UserForm [userName=&quot; + userName + &quot;, password=&quot; + password + &quot;, firstName=&quot; + firstName + &quot;, lastName=&quot;</b>
+&nbsp;                + lastName + &quot;, roleName=&quot; + roleName + &quot;, roleDisplayName=&quot; + roleDisplayName + &quot;, email=&quot; + email + &quot;]&quot;;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-18 14:44</div>
+</div>
+</body>
+</html>

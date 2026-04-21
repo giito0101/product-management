@@ -1,0 +1,61 @@
+<div class="sidebar col-md-2 p-0 bg-light justify-content-center">
+    <div class="offcanvas offcanvas-start offcanvas-lg bg-light" tabindex="-1" id="sidebarMenu"
+        aria-labelledby="sidebarMenuLabel" th:fragment="dashboard">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+            <ul class="nav flex-column mt-2">
+                <li class="nav-item">
+                    <a class="nav-link d-flex flex-column align-items-center gap-1 active" aria-current="page"
+                        th:href="@{/}">
+                        <svg class="bi mb-1">
+                            <use xlink:href="#home" />
+                        </svg>
+                        ホーム
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex flex-column align-items-center gap-1" th:href="@{/product/showList}">
+                        <svg class="bi mb-1">
+                            <use xlink:href="#list" />
+                        </svg>
+                        商品一覧
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex flex-column align-items-center gap-1" th:href="@{/product/register}">
+                        <svg class="bi mb-1">
+                            <use xlink:href="#add" />
+                        </svg>
+                        商品登録
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex flex-column align-items-center gap-1" th:href="@{/product/report}">
+                        <svg class="bi mb-1">
+                            <use xlink:href="#report" />
+                        </svg>
+                        レポート
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('MANAGER', 'ADMIN')">
+                    <a class="nav-link d-flex flex-column align-items-center gap-1" th:href="@{/user/showList}">
+                        <svg class="bi mb-1">
+                            <use xlink:href="#settings" />
+                        </svg>
+                        管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <!-- Add a logout button -->
+                    <form action="#" th:action="@{/logout}" method="POST"
+                        class="nav-link d-flex flex-column align-items-center gap-1">
+                        <button class="btn btn-outline-secondary py-2 px-2" type="submit" value="Logout">ログアウト</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

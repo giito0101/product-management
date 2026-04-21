@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.giitotech.product_management.mapper.UserMapper">
+
+    <select id="findUserByKeywords" resultType="com.giitotech.product_management.dto.UserRolesDto">
+        SELECT
+            u.id AS userId,
+            u.username AS userName,
+            u.email AS email,
+        GROUP_CONCAT(r.display_name ORDER BY r.id SEPARATOR ', ') AS roles
+        FROM users u
+        JOIN users_roles ur ON u.id = ur.user_id
+        JOIN role r ON ur.role_id = r.id
+        GROUP BY u.id, u.username, u.email
+        <if test="keywords != null and keywords.size() > 0">
+            HAVING
+            <foreach collection="keywords" item="kw" separator="AND">
+                (u.username LIKE CONCAT('%', #{kw}, '%')
+                OR u.email LIKE CONCAT('%', #{kw}, '%')
+                OR roles LIKE CONCAT('%', #{kw}, '%'))
+            </foreach>
+        </if>
+        <if test="sortBy != null and direction != null">
+            ORDER BY
+            <choose>
+                <when test="sortBy == 'userName'">u.username</when>
+                <when test="sortBy == 'email'">u.email</when>
+                <when test="sortBy == 'displayName'">roles</when>
+                <otherwise>u.id</otherwise>
+            </choose>
+            ${direction}
+        </if>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countUserByKeywords" resultType="int">
+        SELECT COUNT(*) FROM (
+            SELECT
+                u.id,
+                u.username,
+                u.email,
+            GROUP_CONCAT(r.display_name ORDER BY r.id SEPARATOR ', ') AS roles
+            FROM users u
+            JOIN users_roles ur ON u.id = ur.user_id
+            JOIN role r ON ur.role_id = r.id
+            GROUP BY u.id, u.username, u.email
+            <if test="keywords != null and keywords.size() > 0">
+                HAVING
+                <foreach collection="keywords" item="kw" separator="AND">
+                    (
+                        u.username LIKE CONCAT('%', #{kw}, '%')
+                        OR u.email LIKE CONCAT('%', #{kw}, '%')
+                        OR roles LIKE CONCAT('%', #{kw}, '%')
+                    )
+                </foreach>
+            </if>
+        ) AS sub
+    </select>
+</mapper>

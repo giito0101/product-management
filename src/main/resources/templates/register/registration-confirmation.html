@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Registration Confirmation</title>
+</head>
+<body>
+	<h2>User registered successfully!</h2>
+	
+	<!-- 表示する first name, last name そして emailを -->
+	<ul>
+		<li th:text="'User name: ' + ${webUser.userName}"></li>
+		<li th:text="'First name: ' + ${webUser.firstName}"></li>
+		<li th:text="'Last name: ' + ${webUser.lastName}"></li>
+		<li th:text="'Email name: ' + ${webUser.email}"></li>
+	</ul>
+	
+	<hr>
+	
+	<a th:href="@{/showMyLoginPage}">Login with new user name</a>
+</body>
+</html>

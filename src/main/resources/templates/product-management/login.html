@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="jp" data-bs-theme="auto">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Daisuke Itoga">
+  <title>商品管理システム試作品 - ログイン画面</title>
+  <div th:replace="product-management/fragments/head.html"></div>
+  <link rel="stylesheet" th:href="@{/css/product-management/login.css}">
+</head>
+
+<body class="d-flex justify-content-center py-4">
+    <main class="form-signin w-100 align-items-start">
+        <div class="pb-5 text-center">
+            <img class="d-block mx-auto mb-4" th:src="@{/asset/logo.png}" alt="" width="100" height="100">
+            <h3>サインイン</h3>
+        </div>
+        <form th:action="@{/authenticateTheUser}" method="POST" class="bg-body-tertiary p-5">
+            <!-- Check for login error -->
+            <div th:if="${param.error}">
+
+                <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                    ユーザー名とパスワードが無効です。
+                </div>
+
+            </div>
+            <div class="col mb-3">
+                <label for="username" class="form-label">ユーザー名</label>
+                <div class="input-group has-validation">
+                    <input type="text" class="form-control" id="username" placeholder="山田太郎" name="username"
+                        autocomplete="username" required>
+                    <div class="invalid-feedback">
+                        ユーザー名が違います
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-3">
+                <label for="password" class="form-label">パスワード</label>
+                <div class="input-group has-validation">
+                    <input type="password" class="form-control" id="password" placeholder="password" name="password"
+                        autocomplete="current-password" required>
+                    <div class="invalid-feedback">
+                        パスワードが一致しません
+                    </div>
+                </div>
+            </div>
+            <!-- Remember Me checkbox -->
+            <div class="form-check text-start my-3">
+                <input class="form-check-input" type="checkbox" value="true" id="remember-me" name="remember-me">
+                <label class="form-check-label" for="remember-me">
+                    ログイン状態を保持
+                </label>
+            </div>
+            <button class="btn btn-outline-secondary w-100 py-2　bg-white" type="submit">サインイン</button>
+        </form>
+    </main>
+    <!-- JavaScriptファイルの読み込み -->
+    <script th:src="@{/js/validation.js}"></script>
+</body>
+
+</html>

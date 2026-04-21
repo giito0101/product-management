@@ -1,0 +1,401 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ProductDaoImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.giitotech.product_management.dao</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductDaoImpl (com.giitotech.product_management.dao)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductDaoImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    11.1%
+  </span>
+  <span class="absValue">
+    (1/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/52)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1.9%
+  </span>
+  <span class="absValue">
+    (2/105)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ProductDaoImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    11.1%
+  </span>
+  <span class="absValue">
+    (1/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/52)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1.9%
+  </span>
+  <span class="absValue">
+    (2/105)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.giitotech.product_management.dao;
+&nbsp;
+&nbsp;import java.sql.Timestamp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.data.domain.Page;
+&nbsp;import org.springframework.data.domain.PageImpl;
+&nbsp;import org.springframework.data.domain.Pageable;
+&nbsp;import org.springframework.data.domain.Sort;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import com.giitotech.product_management.entity.Product;
+&nbsp;
+&nbsp;import jakarta.persistence.EntityManager;
+&nbsp;import jakarta.persistence.NoResultException;
+&nbsp;import jakarta.persistence.TypedQuery;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public class ProductDaoImpl implements ProductDao {
+&nbsp;	// entity managerのためのフィールドを定義する
+&nbsp;	private EntityManager entityManager;
+&nbsp;
+&nbsp;	// constructor injectionを使ってentity managerを注入する
+&nbsp;	@Autowired
+<b class="fc">&nbsp;	public ProductDaoImpl(EntityManager entityManager) {</b>
+<b class="fc">&nbsp;		this.entityManager = entityManager;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Page&lt;Product&gt; findProductByKeyword(Pageable pageable, String[] keywords) {
+<b class="nc">&nbsp;		int maxKeywords = 10;</b>
+&nbsp;
+&nbsp;		// 検索キーワードのリスト作成（空のkeywordsも許容）
+<b class="nc">&nbsp;		List&lt;String&gt; keywordList = keywords != null ? Arrays.stream(keywords)</b>
+<b class="nc">&nbsp;				.filter(k -&gt; k != null &amp;&amp; !k.trim().isEmpty())</b>
+<b class="nc">&nbsp;				.limit(maxKeywords)</b>
+<b class="nc">&nbsp;				.map(k -&gt; &quot;%&quot; + k.trim() + &quot;%&quot;) // LIKE句用に加工</b>
+<b class="nc">&nbsp;				.collect(Collectors.toList()) : new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;		// ベースクエリ
+<b class="nc">&nbsp;		StringBuilder jpql = new StringBuilder(&quot;SELECT p FROM Product p LEFT JOIN p.category c&quot;);</b>
+<b class="nc">&nbsp;		StringBuilder countJpql = new StringBuilder(&quot;SELECT COUNT(p) FROM Product p LEFT JOIN p.category c&quot;);</b>
+&nbsp;
+&nbsp;		// WHERE 句の追加
+<b class="nc">&nbsp;		if (!keywordList.isEmpty()) {</b>
+<b class="nc">&nbsp;			jpql.append(&quot; WHERE &quot;);</b>
+<b class="nc">&nbsp;			countJpql.append(&quot; WHERE &quot;);</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; keywordList.size(); i++) {</b>
+<b class="nc">&nbsp;				if (i &gt; 0) {</b>
+<b class="nc">&nbsp;					jpql.append(&quot; OR &quot;);</b>
+<b class="nc">&nbsp;					countJpql.append(&quot; OR &quot;);</b>
+&nbsp;				}
+<b class="nc">&nbsp;				jpql.append(&quot;(p.name LIKE :keyword&quot;).append(i).append(&quot; OR c.name LIKE :keyword&quot;).append(i).append(&quot;)&quot;);</b>
+<b class="nc">&nbsp;				countJpql.append(&quot;(p.name LIKE :keyword&quot;).append(i).append(&quot; OR c.name LIKE :keyword&quot;).append(i)</b>
+<b class="nc">&nbsp;						.append(&quot;)&quot;);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		// ORDER BY 句の追加（動的）
+<b class="nc">&nbsp;		Sort sort = pageable.getSort();</b>
+<b class="nc">&nbsp;		if (sort.isSorted()) {</b>
+<b class="nc">&nbsp;			jpql.append(&quot; ORDER BY &quot;);</b>
+<b class="nc">&nbsp;			countJpql.append(&quot; ORDER BY &quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			List&lt;String&gt; orderConditions = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;			for (Sort.Order order : sort) {</b>
+<b class="nc">&nbsp;				String property = order.getProperty();</b>
+<b class="nc">&nbsp;				String direction = order.getDirection().isAscending() ? &quot;ASC&quot; : &quot;DESC&quot;;</b>
+&nbsp;
+&nbsp;				// テーブル名を適切に指定
+<b class="nc">&nbsp;				if (&quot;category.name&quot;.equals(property)) {</b>
+<b class="nc">&nbsp;					orderConditions.add(&quot;c.name &quot; + direction);</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					orderConditions.add(&quot;p.&quot; + property + &quot; &quot; + direction);</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			jpql.append(String.join(&quot;, &quot;, orderConditions));</b>
+<b class="nc">&nbsp;			countJpql.append(String.join(&quot;, &quot;, orderConditions));</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// クエリ作成
+<b class="nc">&nbsp;		TypedQuery&lt;Product&gt; query = entityManager.createQuery(jpql.toString(), Product.class);</b>
+<b class="nc">&nbsp;		TypedQuery&lt;Long&gt; countQuery = entityManager.createQuery(countJpql.toString(), Long.class);</b>
+&nbsp;
+&nbsp;		// パラメータ設定
+<b class="nc">&nbsp;		for (int i = 0; i &lt; keywordList.size(); i++) {</b>
+<b class="nc">&nbsp;			query.setParameter(&quot;keyword&quot; + i, keywordList.get(i));</b>
+<b class="nc">&nbsp;			countQuery.setParameter(&quot;keyword&quot; + i, keywordList.get(i));</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		long totalElements = 0;</b>
+<b class="nc">&nbsp;		List&lt;Product&gt; products = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;		// 件数を取得
+<b class="nc">&nbsp;		totalElements = countQuery.getSingleResult();</b>
+&nbsp;
+&nbsp;		// ページング設定
+<b class="nc">&nbsp;		query.setFirstResult((int) pageable.getOffset());</b>
+<b class="nc">&nbsp;		query.setMaxResults(pageable.getPageSize());</b>
+&nbsp;
+<b class="nc">&nbsp;		products = query.getResultList();</b>
+&nbsp;
+<b class="nc">&nbsp;		return new PageImpl&lt;&gt;(products, pageable, totalElements);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Product findProductByNameAndCategoryName(String name, int categoryId) {
+<b class="nc">&nbsp;		String jpql = &quot;SELECT p FROM Product p &quot; +</b>
+&nbsp;				&quot;WHERE p.name = :name AND p.category.id = :categoryId&quot;;
+&nbsp;
+<b class="nc">&nbsp;		TypedQuery&lt;Product&gt; query = entityManager.createQuery(jpql, Product.class);</b>
+<b class="nc">&nbsp;		query.setParameter(&quot;name&quot;, name);</b>
+<b class="nc">&nbsp;		query.setParameter(&quot;categoryId&quot;, categoryId);</b>
+<b class="nc">&nbsp;		Product product = null;</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			product = query.getSingleResult();</b>
+&nbsp;		} catch (NoResultException e) {
+<b class="nc">&nbsp;			product = null;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return product;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public long countProducts() {
+<b class="nc">&nbsp;		String jpql = &quot;SELECT COUNT(p) FROM Product p&quot;;</b>
+<b class="nc">&nbsp;		return (long) entityManager.createQuery(jpql).getSingleResult();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public long countOutofStockProducts() {
+<b class="nc">&nbsp;		String jpql = &quot;SELECT COUNT(p) FROM Product p WHERE p.stock = 0&quot;;</b>
+<b class="nc">&nbsp;		return (long) entityManager.createQuery(jpql).getSingleResult();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;Product&gt; findSoldOutItems(String sortBy, String sortOrder) {
+&nbsp;		// 条件を指定して汎用メソッドを呼び出す
+<b class="nc">&nbsp;		String condition = &quot;p.stock = 0&quot;;</b>
+<b class="nc">&nbsp;		return getSortedProducts(condition, sortBy, sortOrder);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;Product&gt; findLowInStockItems(String sortBy, String sortOrder) {
+&nbsp;		// 条件を指定して汎用メソッドを呼び出す
+<b class="nc">&nbsp;		String condition = &quot;p.stock &gt; 0 AND p.stock &lt;= 5&quot;;</b>
+<b class="nc">&nbsp;		return getSortedProducts(condition, sortBy, sortOrder);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public List&lt;Product&gt; getSortedProducts(String condition, String sortBy, String sortOrder) {
+&nbsp;		// サポートされているソート項目とデフォルト値
+<b class="nc">&nbsp;		Map&lt;String, String&gt; sortFields = Map.of(</b>
+&nbsp;				&quot;name&quot;, &quot;p.name&quot;,
+&nbsp;				&quot;stock&quot;, &quot;p.stock&quot;,
+&nbsp;				&quot;category&quot;, &quot;c.name&quot;,
+&nbsp;				&quot;price&quot;, &quot;p.price&quot;);
+&nbsp;
+&nbsp;		// ソートキーのバリデーション
+<b class="nc">&nbsp;		String sortField = sortFields.getOrDefault(sortBy, &quot;p.name&quot;); // デフォルトは商品名</b>
+<b class="nc">&nbsp;		String order = &quot;ASC&quot;.equalsIgnoreCase(sortOrder) ? &quot;ASC&quot; : &quot;DESC&quot;; // デフォルトは昇順</b>
+&nbsp;
+&nbsp;		// ベースのJPQL
+<b class="nc">&nbsp;		String jpql = &quot;SELECT p FROM Product p LEFT JOIN p.category c WHERE &quot; + condition + &quot; ORDER BY &quot; + sortField</b>
+&nbsp;				+ &quot; &quot; + order;
+&nbsp;
+&nbsp;		// クエリを作成
+<b class="nc">&nbsp;		TypedQuery&lt;Product&gt; query = entityManager.createQuery(jpql, Product.class);</b>
+&nbsp;
+&nbsp;		// 結果を取得
+<b class="nc">&nbsp;		return query.getResultList();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public List&lt;Product&gt; findListProductByKeywordAndDate(
+&nbsp;			String[] keywords, LocalDate startDate, LocalDate endDate, String stockType, String sortBy,
+&nbsp;			String direction) {
+&nbsp;
+&nbsp;		String stockCondition;
+&nbsp;		// 在庫条件を動的に設定
+<b class="nc">&nbsp;		switch (stockType) {</b>
+&nbsp;		case &quot;low_in_stock_items&quot;:
+<b class="nc">&nbsp;			stockCondition = &quot;p.stock &gt; 0 AND p.stock &lt;= 5&quot;;</b>
+&nbsp;			break;
+&nbsp;		case &quot;sold_out_items&quot;:
+&nbsp;		default:
+<b class="nc">&nbsp;			stockCondition = &quot;p.stock = 0&quot;;</b>
+&nbsp;			break;
+&nbsp;		}
+&nbsp;
+&nbsp;		// キーワードを分割し、最大10個に制限
+<b class="nc">&nbsp;		int maxKeywords = 10;</b>
+<b class="nc">&nbsp;		List&lt;String&gt; keywordList = Arrays.stream(keywords != null ? keywords : new String[0])</b>
+<b class="nc">&nbsp;				.limit(maxKeywords)</b>
+<b class="nc">&nbsp;				.filter(k -&gt; k != null &amp;&amp; !k.isEmpty())</b>
+<b class="nc">&nbsp;				.map(k -&gt; &quot;%&quot; + k + &quot;%&quot;)</b>
+<b class="nc">&nbsp;				.collect(Collectors.toList());</b>
+&nbsp;
+&nbsp;		// サポートされているソート項目を定義
+<b class="nc">&nbsp;		Map&lt;String, String&gt; sortFields = Map.of(</b>
+&nbsp;				&quot;name&quot;, &quot;p.name&quot;,
+&nbsp;				&quot;stock&quot;, &quot;p.stock&quot;,
+&nbsp;				&quot;category&quot;, &quot;c.name&quot;,
+&nbsp;				&quot;price&quot;, &quot;p.price&quot;);
+&nbsp;
+&nbsp;		// ソートフィールドのバリデーションとデフォルト設定
+<b class="nc">&nbsp;		String sortField = sortFields.getOrDefault(sortBy, &quot;p.name&quot;); // デフォルトは商品名</b>
+<b class="nc">&nbsp;		String sortDirection = &quot;ASC&quot;.equalsIgnoreCase(direction) ? &quot;ASC&quot; : &quot;DESC&quot;; // デフォルトは昇順</b>
+&nbsp;
+&nbsp;		// JPQLの動的生成
+<b class="nc">&nbsp;		StringBuilder jpql = new StringBuilder(&quot;SELECT p FROM Product p LEFT JOIN p.category c WHERE &quot;);</b>
+<b class="nc">&nbsp;		jpql.append(stockCondition); // 在庫条件を挿入</b>
+&nbsp;
+<b class="nc">&nbsp;		boolean hasKeywordCondition = !keywordList.isEmpty();</b>
+<b class="nc">&nbsp;		boolean hasStartDate = startDate != null;</b>
+<b class="nc">&nbsp;		boolean hasEndDate = endDate != null;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (hasKeywordCondition) {</b>
+<b class="nc">&nbsp;			jpql.append(&quot; AND (&quot;);</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; keywordList.size(); i++) {</b>
+<b class="nc">&nbsp;				if (i &gt; 0) {</b>
+<b class="nc">&nbsp;					jpql.append(&quot; OR &quot;);</b>
+&nbsp;				}
+<b class="nc">&nbsp;				jpql.append(&quot;(p.name LIKE :keyword&quot;).append(i).append(&quot; OR c.name LIKE :keyword&quot;).append(i).append(&quot;)&quot;);</b>
+&nbsp;			}
+<b class="nc">&nbsp;			jpql.append(&quot;)&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (hasStartDate) {</b>
+<b class="nc">&nbsp;			jpql.append(&quot; AND p.lastUpdated &gt;= :startDate&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (hasEndDate) {</b>
+<b class="nc">&nbsp;			jpql.append(&quot; AND p.lastUpdated &lt;= :endDate&quot;);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// ソート句を追加
+<b class="nc">&nbsp;		jpql.append(&quot; ORDER BY &quot;).append(sortField).append(&quot; &quot;).append(sortDirection);</b>
+&nbsp;
+&nbsp;		// クエリを作成
+<b class="nc">&nbsp;		TypedQuery&lt;Product&gt; query = entityManager.createQuery(jpql.toString(), Product.class);</b>
+&nbsp;
+&nbsp;		// パラメータを設定
+<b class="nc">&nbsp;		if (hasKeywordCondition) {</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; keywordList.size(); i++) {</b>
+<b class="nc">&nbsp;				query.setParameter(&quot;keyword&quot; + i, keywordList.get(i));</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (hasStartDate) {</b>
+<b class="nc">&nbsp;			query.setParameter(&quot;startDate&quot;, Timestamp.valueOf(startDate.atStartOfDay()));</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (hasEndDate) {</b>
+<b class="nc">&nbsp;			query.setParameter(&quot;endDate&quot;, Timestamp.valueOf(endDate.atTime(23, 59, 59, 999_000_000)));</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// 結果を取得
+<b class="nc">&nbsp;		return query.getResultList();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-18 14:44</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,282 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GlobalExceptionHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.giitotech.product_management.exception</a>
+</div>
+
+<h1>Coverage Summary for Class: GlobalExceptionHandler (com.giitotech.product_management.exception)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GlobalExceptionHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (2/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.5%
+  </span>
+  <span class="absValue">
+    (2/57)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GlobalExceptionHandler$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (2/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.5%
+  </span>
+  <span class="absValue">
+    (2/57)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.giitotech.product_management.exception;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.ui.Model;
+&nbsp;import org.springframework.web.bind.annotation.ControllerAdvice;
+&nbsp;import org.springframework.web.bind.annotation.ExceptionHandler;
+&nbsp;import org.springframework.web.bind.annotation.ResponseStatus;
+&nbsp;import org.springframework.web.servlet.ModelAndView;
+&nbsp;import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+&nbsp;
+&nbsp;@ControllerAdvice
+<b class="fc">&nbsp;public class GlobalExceptionHandler {</b>
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);</b>
+&nbsp;
+&nbsp;    @ExceptionHandler(SessionNotFoundException.class)
+&nbsp;    public String handleSessionNotFound(SessionNotFoundException ex,
+&nbsp;                                        RedirectAttributes redirectAttributes) {
+<b class="nc">&nbsp;        redirectAttributes.addFlashAttribute(&quot;errorMessage&quot;, ex.getMessage());</b>
+<b class="nc">&nbsp;        return &quot;redirect:/error/general&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // UserFormNotFoundExceptionを処理
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    @ExceptionHandler(UserFormNotFoundException.class)
+&nbsp;    public ModelAndView handleUserFormNotFoundException(UserFormNotFoundException ex) {
+<b class="nc">&nbsp;        ModelAndView mav = new ModelAndView(&quot;product-management/error/general&quot;);</b>
+<b class="nc">&nbsp;        String errorMessage = ex.getMessage() != null ? ex.getMessage() : &quot;UserForm Not Found&quot;;</b>
+&nbsp;
+&nbsp;        // ログと画面にエラーメッセージを出力
+<b class="nc">&nbsp;        logger.error(errorMessage, ex);</b>
+&nbsp;
+&nbsp;        // エラーメッセージとHTTPステータスコードを含むレスポンスを返す
+<b class="nc">&nbsp;        mav.addObject(&quot;errorMessage&quot;, errorMessage);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;status&quot;, HttpStatus.NOT_FOUND);</b>
+&nbsp;
+<b class="nc">&nbsp;        return mav;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(RoleNotFoundException.class)
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public ModelAndView handleRoleNotFoundException(RoleNotFoundException ex) {
+&nbsp;        // 定数定義
+<b class="nc">&nbsp;        final String DEFAULT_MESSAGE = &quot;Role Not Found&quot;;</b>
+<b class="nc">&nbsp;        final String ERROR_VIEW = &quot;product-management/error/general&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        ModelAndView mav = new ModelAndView(ERROR_VIEW);</b>
+&nbsp;
+&nbsp;        // エラーメッセージの設定（nullの場合はデフォルトメッセージを使用）
+<b class="nc">&nbsp;        String errorMessage = ex.getMessage();</b>
+<b class="nc">&nbsp;        if (errorMessage == null) {</b>
+<b class="nc">&nbsp;            errorMessage = DEFAULT_MESSAGE;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // ログ出力とエラー情報の設定
+<b class="nc">&nbsp;        logger.error(errorMessage, ex);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;errorMessage&quot;, errorMessage);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;status&quot;, HttpStatus.NOT_FOUND);</b>
+&nbsp;
+<b class="nc">&nbsp;        return mav;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(UserNotFoundException.class)
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public ModelAndView handleUserNotFoundException(UserNotFoundException ex) {
+&nbsp;        // 定数定義
+<b class="nc">&nbsp;        final String DEFAULT_MESSAGE = &quot;User Not Found&quot;;</b>
+<b class="nc">&nbsp;        final String ERROR_VIEW = &quot;product-management/error/general&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        ModelAndView mav = new ModelAndView(ERROR_VIEW);</b>
+&nbsp;
+&nbsp;        // エラーメッセージの設定（nullの場合はデフォルトメッセージを使用）
+<b class="nc">&nbsp;        String errorMessage = ex.getMessage();</b>
+<b class="nc">&nbsp;        if (errorMessage == null) {</b>
+<b class="nc">&nbsp;            errorMessage = DEFAULT_MESSAGE;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // ログ出力とエラー情報の設定
+<b class="nc">&nbsp;        logger.error(errorMessage, ex);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;errorMessage&quot;, errorMessage);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;status&quot;, HttpStatus.NOT_FOUND);</b>
+&nbsp;
+<b class="nc">&nbsp;        return mav;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // IOException のハンドリング
+&nbsp;    @ExceptionHandler(IOException.class)
+&nbsp;    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+&nbsp;    public ModelAndView handleIOException(IOException ex) {
+<b class="nc">&nbsp;        String errorMessage = &quot;Internal Server Error: I/O エラーが発生しました&quot;;</b>
+<b class="nc">&nbsp;        logger.error(errorMessage, ex);</b>
+&nbsp;
+<b class="nc">&nbsp;        ModelAndView mav = new ModelAndView(&quot;product-management/error/general&quot;);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;errorMessage&quot;, errorMessage);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;status&quot;, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+<b class="nc">&nbsp;        return mav;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // ProductNotFoundExceptionを処理
+&nbsp;    @ExceptionHandler(ProductNotFoundException.class)
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public ModelAndView handleIllegalArgumentException(ProductNotFoundException ex) {
+<b class="nc">&nbsp;        String errorMessage = &quot;Product Not Found&quot;;</b>
+&nbsp;
+&nbsp;        // ログと画面にエラーメッセージを出力
+<b class="nc">&nbsp;        if (ex.getMessage() == null) {</b>
+<b class="nc">&nbsp;            logger.error(errorMessage, ex);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            logger.error(ex.getMessage(), ex);</b>
+<b class="nc">&nbsp;            errorMessage = ex.getMessage();</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        ModelAndView mav = new ModelAndView(&quot;product-management/error/general&quot;);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;errorMessage&quot;, errorMessage);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;status&quot;, HttpStatus.NOT_FOUND);</b>
+<b class="nc">&nbsp;        return mav;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // IllegalArgumentExceptionを処理
+&nbsp;    @ExceptionHandler(IllegalArgumentException.class)
+&nbsp;    @ResponseStatus(HttpStatus.BAD_REQUEST)
+&nbsp;    public ModelAndView handleIllegalArgumentException(IllegalArgumentException ex) {
+<b class="nc">&nbsp;        String errorMessage = &quot;Invalid argument provided: &quot; + ex.getMessage();</b>
+<b class="nc">&nbsp;        logger.error(errorMessage, ex);</b>
+&nbsp;
+<b class="nc">&nbsp;        ModelAndView mav = new ModelAndView(&quot;product-management/error/general&quot;);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;errorMessage&quot;, ex.getMessage());</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;status&quot;, HttpStatus.BAD_REQUEST);</b>
+<b class="nc">&nbsp;        return mav;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // その他の例外を処理
+&nbsp;    @ExceptionHandler(Exception.class)
+&nbsp;    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+&nbsp;    public ModelAndView handleGeneralException(Exception ex) {
+<b class="nc">&nbsp;        String errorMessage = &quot;An unexpected error occurred: &quot; + ex.getMessage();</b>
+<b class="nc">&nbsp;        logger.error(errorMessage, ex);</b>
+&nbsp;
+<b class="nc">&nbsp;        ModelAndView mav = new ModelAndView(&quot;product-management/error/general&quot;);</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;errorMessage&quot;, ex.getMessage());</b>
+<b class="nc">&nbsp;        mav.addObject(&quot;status&quot;, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+<b class="nc">&nbsp;        return mav;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-18 14:44</div>
+</div>
+</body>
+</html>

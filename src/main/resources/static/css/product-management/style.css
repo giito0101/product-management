@@ -1,0 +1,143 @@
+@charset "utf-8";
+html,
+body {
+  /* ルート要素に高さを指定 */
+  height: 100%;
+}
+
+.bi-big {
+  width: 32px;
+  height: 32px;
+}
+
+.rounded-table {
+  /* 枠線 */
+  border: none;
+  /* 背景色（任意） */
+  background-color: #fff;
+}
+
+.rounded-container {
+  /* 枠線 */
+  border: none;
+  /* 角の丸み */
+  border-radius: 10px;
+  /* 背景色（任意） */
+  background-color: #fff;
+}
+
+.rounded-table table {
+  margin: 0;
+}
+
+.badge-custom {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  /* 影を追加 */
+  border-radius: 0;
+  /* 丸みをなくす */
+  padding: 0.5em 1.2em;
+  /* 余白を調整（必要に応じて変更） */
+}
+
+.bg-skyblue {
+  background-color: #dbf5ff;
+}
+
+@media (min-width: 768px) {
+  header {
+    height: 60px;
+  }
+  
+  .sidebar {
+	height: calc(100vh - 60px);
+  }
+
+  /* ヘッダーを除く高さ */
+  .container-1 {
+    height: auto;
+  }
+
+  .offcanvas-lg .offcanvas-header {
+    /* ヘッダーを非表示 */
+    display: none;
+  }
+
+  .offcanvas-lg .offcanvas-body {
+    /* ボディを表示 */
+    display: block;
+    /* 必要に応じて高さ調整 */
+    height: 100%;
+    /* スクロールを許可 */
+    overflow-y: auto;
+  }
+
+  .offcanvas.offcanvas-start {
+    transform: none;
+  }
+
+  .offcanvas {
+    visibility: visible;
+    transform: translateX(0);
+    /* スタティック配置にする */
+    position: static;
+    /* 非表示状態を解除 */
+    visibility: visible;
+  }
+}
+
+.table td,
+.table th {
+  /* 文字を水平中央揃え */
+  text-align: center;
+  /* 文字を垂直中央揃え */
+  vertical-align: middle;
+  
+  font-size: x-small;
+}
+
+.page-link {
+  font-size: x-small;
+}
+
+@media (min-width: 576px) {
+  .rounded-table {
+    /* 枠線 */
+    border: 1px solid #ddd;
+    border-bottom: transparent;
+    /* 角の丸み */
+    border-radius: 10px;
+    /* 角の丸みに合わせて内容をクリップ */
+    overflow: hidden;
+  }
+
+  .rounded-container {
+    /* 枠線 */
+    border: solid 1px #ddd;
+  }
+
+  .table td,
+  .table th {
+    font-size: medium;
+  }
+
+  .page-link {
+    font-size: medium;
+  }
+}
+
+.offcanvas {
+  border-right: none !important;
+}
+
+@media (min-width: 600px) and (max-width: 807px) {
+
+  /* 600px以上807px以下に適用されるスタイル */
+  .nav-link {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.nav-item {
+  padding-bottom: 10px;
+}

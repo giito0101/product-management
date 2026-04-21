@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Daisuke Itoga">
+    <title>商品管理システム試作品 - 商品編集画面</title>
+    <div th:replace="product-management/fragments/head.html"></div>
+    <link th:href="@{/css/product-management/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/product-management/register.css}" rel="stylesheet">
+</head>
+
+<body>
+    <div th:replace="product-management/fragments/symbols :: symbols"></div>
+
+    <div th:replace="product-management/fragments/header.html"></div>
+
+    <div class="container-1 d-flex">
+        <div th:replace="product-management/fragments/dashboard.html">
+        </div>
+        <main class="container-fluid col-md-10 justify-content-center mt-4">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h2 class="d-flex justify-content-start col-12 col-md-9 col-lg-9" th:if="${isNewUser}">
+                    <span class="badge bg-success mb-3">登録が完了しました</span>
+                </h2>
+                <div class="bg-register rounded-container p-sm-4 p-0 col-12 col-md-9 col-lg-9 flex-column">
+                    <form th:action="@{/product/editConfirmProcessing}" method="post" class="row g-3"
+                        th:object="${productForm}">
+                        <h2 class="mb-3 d-flex justify-content-center align-items-center">
+                            <svg class="bi-big">
+                                <use xlink:href="#edit2" />
+                            </svg>
+                            商品編集
+                        </h2>
+                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                        <span th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"
+                            class="text-danger"></span>
+                        <span th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" class="text-danger"></span>
+                        <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger"></span>
+                        <span th:if="${registrationError}" th:text="${registrationError}" class="text-danger"></span>
+                                <!-- 隠しフィールド -->
+                                <input type="hidden" id="id" th:field="*{id}" />
+                        <div class="col-12 d-flex div01">
+                            <label for="label01" class="form-label col-4 col-md-2 text-end pe-4">商品名</label>
+                            <div class="col-8 col-md-10">
+                                <input type="text" class="form-control" id="validation01" placeholder="商品名を入力" required
+                                    th:field="*{name}">
+                                <div class="valid-feedback">
+                                    良さそう！
+                                </div>
+                                <div class="invalid-feedback">
+                                    商品名を入力してください
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex div02">
+                            <label for="label02" class="form-label col-4 col-md-2 text-end pe-4">カテゴリ</label>
+                            <div class="col-5 col-md-7 div02">
+                                <!-- プルダウン -->
+                                <select class="form-select custom-select-size" id="validation02"
+                                    th:classappend="${#fields.hasErrors('categoryId')} ? 'is-invalid' : ''"
+                                    th:field="*{categoryId}" required>
+                                    <option selected value="" hidden>カテゴリを選択してください</option>
+                                    <th:block th:each="category : ${categories}">
+                                        <option th:value="${category.id}" th:text="${category.name}"></option>
+                                    </th:block>
+                                </select>
+                                <!-- 隠しフィールド -->
+                                <input type="hidden" id="categoryName" th:field="*{categoryName}" />
+
+                                <!-- バリデーションエラーメッセージ -->
+                                <div class="valid-feedback">良さそう！</div>
+                                <div class="invalid-feedback">
+                                    カテゴリを選択してください
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex div03">
+                            <label for="label03" class="form-label col-4 col-md-2 text-end pe-4">在庫数</label>
+                            <div class="col-5 col-md-7">
+                                <input type="number" class="form-control" id="validation03" placeholder="在庫数を入力"
+                                    required th:field="*{stock}">
+                                <div class="valid-feedback">
+                                    良さそう！
+                                </div>
+                                <div class="invalid-feedback">
+                                    在庫数が入力されていません
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex div04">
+                            <label for="label04" class="form-label col-4 col-md-2 text-end pe-4">価格</label>
+                            <div class="col-5 col-md-7">
+                                <input type="number" class="form-control" id="validation04" placeholder="価格を入力" required
+                                    th:field="*{price}">
+                                <div class="valid-feedback">
+                                    良さそう！
+                                </div>
+                                <div class="invalid-feedback">
+                                    価格が入力されていません
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="mt-3 col-3 btn btn-outline-secondary">確認</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+    </div>
+    <!-- スクリプトの読み込み -->
+    <script th:src=@{/js/product_register_validation.js} defer></script>
+</body>
+
+</html>

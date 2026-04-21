@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Daisuke Itoga">
+    <title>商品管理システム試作品 - ユーザー編集画面</title>
+    <div th:replace="product-management/fragments/head.html"></div>
+    <link th:href="@{/css/product-management/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/product-management/register.css}" rel="stylesheet">
+</head>
+
+<body>
+    <div th:replace="product-management/fragments/symbols :: symbols"></div>
+
+    <div th:replace="product-management/fragments/header.html"></div>
+
+    <div class="container-1 d-flex">
+        <div th:replace="product-management/fragments/dashboard.html">
+        </div>
+        <main class="container-fluid col-md-10 justify-content-center mt-4">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h2 class="d-flex justify-content-start col-12 col-md-9 col-lg-9" th:if="${isNewUser}">
+                    <span class="badge bg-success mb-3">登録が完了しました</span>
+                </h2>
+                <div class="bg-register rounded-container p-sm-4 p-0 col-12 col-md-9 col-lg-9 flex-column">
+                    <form class="row g-3" th:object="${userForm}" th:action="@{/user/editConfirmProcessing}" method="post">
+                        <h2 class="mb-3 d-flex justify-content-center align-items-center">
+                            <svg class="bi-big">
+                                <use xlink:href="#edit2" />
+                            </svg>
+                            ユーザー編集
+                        </h2>
+                        <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" class="text-danger"></span>
+                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                            class="text-danger"></span>
+                        <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger"></span>
+                        <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger"></span>
+                        <span th:if="${#fields.hasErrors('roleDisplayName')}" th:errors="*{roleDisplayName}" class="text-danger"></span>
+                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
+                        <span th:if="${registrationError}" th:text="${registrationError}" class="text-danger"></span>
+                        <div class="col-12 d-flex">
+                            <label for="validation01" class="form-label col-2 text-end pe-2 pe-md-4">ユーザー名</label>
+                            <div class="col-7 div01">
+                                <input type="text" class="form-control" id="validation01"
+                                    placeholder="ユーザー名を入力" required th:field="*{userName}" autocomplete="off">
+                                <!-- 隠しフィールド -->
+                                <input type="hidden" id="id" th:field="*{id}" />
+                                <div class="valid-feedback">
+                                    良さそう！
+                                </div>
+                                <div class="invalid-feedback">
+                                    ユーザー名を入力してください
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <label for="validation02" class="form-label col-2 text-end pe-2 pe-md-4">パスワード</label>
+                            <div class="col-7 div02">
+                                <input type="password" class="form-control" id="validation02"
+                                    placeholder="パスワードを入力" th:field="*{password}" autocomplete="off">
+								<button type="button" onclick="togglePassword()" class="mt-2">👁</button>
+                                <div class="valid-feedback">
+                                    良さそう！
+                                </div>
+                                <div class="invalid-feedback">
+                                    パスワードを入力してください
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <label for="validation03" class="form-label col-2 text-end pe-2 pe-md-4">名字</label>
+                            <div class="col-4 col-md-3 div03">
+                                <input type="text" class="form-control" id="validation03"
+                                    placeholder="名字を入力" required th:field="*{lastName}" autocomplete="off">
+                                <div class="valid-feedback">
+                                    良さそう！
+                                </div>
+                                <div class="invalid-feedback">
+                                    名字を入力してください
+                                </div>
+                            </div>
+                            <label for="validation04" class="form-label col-2 text-end pe-2 pe-md-4">名前</label>
+                            <div class="col-4 col-md-3 div04">
+                                <input type="text" class="form-control" id="validation04"
+                                    placeholder="名前を入力" required th:field="*{firstName}" autocomplete="off">
+                                <div class="valid-feedback">
+                                    良さそう！
+                                </div>
+                                <div class="invalid-feedback">
+                                    名前を入力してください
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <label for="validation05" class="form-label col-2 text-end pe-2 pe-md-4">役職</label>
+                            <div class="col-7 div05">
+                                <select class="form-select custom-select-size" id="validation05"
+                                    required th:field="*{roleDisplayName}">
+                                    <option value="" hidden>選択してください</option>
+                                    <th:block th:each="role : ${roles}">
+                                        <option th:value="${role.displayName}" th:text="${role.displayName}"></option>
+                                    </th:block>
+                                </select>
+                                <div class="valid-feedback">
+                                    良さそう！
+                                </div>
+                                <div class="invalid-feedback">
+                                    役職を入力してください
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <label for="validation06" class="form-label col-2 text-end pe-2 pe-md-4">メール</label>
+                            <div class="col-7 div06">
+                                <input type="email" class="form-control" id="validation06"
+                                    placeholder="メールを入力" required th:field="*{email}">
+                                <div class="valid-feedback">
+                                    良さそう！
+                                </div>
+                                <div class="invalid-feedback">
+                                    メールを入力してください
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="mt-3 col-3 btn btn-outline-secondary">確認</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+    </div>
+    <script th:src=@{/js/user_edit_validation.js} defer></script>
+    <script th:src=@{/js/password_hidden.js} defer></script>
+</body>
+
+</html>

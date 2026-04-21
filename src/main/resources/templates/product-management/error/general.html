@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>giito - Error</title>
+    <div th:replace="product-management/fragments/head.html"></div>
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+
+    <div class="text-center p-4 rounded shadow-lg bg-white" style="max-width: 500px;">
+        <!-- ロゴ -->
+        <img class="mb-4" th:src="@{/asset/logo.png}" alt="Logo" style="width: 150px; height: 150px;">
+        
+        <!-- エラーヘッディング -->
+        <h2 class="text-danger display-4 mb-3">An error occurred</h2>
+        
+        <!-- エラーメッセージ -->
+        <p class="text-muted mb-4" th:text="${errorMessage}">Sorry, something went wrong. Please try again later or go back to the home page.</p>
+        
+        <!-- HTTPステータス -->
+        <p class="text-muted mb-4" th:text="'HTTP Status: ' + ${status}"></p>
+        
+        <!-- ホームページへのリンク -->
+        <a href="/" class="btn btn-primary btn-lg">Back to Home Page</a>
+    </div>
+</body>
+</html>

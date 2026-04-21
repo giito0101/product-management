@@ -1,0 +1,393 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ProductServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.giitotech.product_management.service</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductServiceImpl (com.giitotech.product_management.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.5%
+  </span>
+  <span class="absValue">
+    (1/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/28)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.7%
+  </span>
+  <span class="absValue">
+    (6/90)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ProductServiceImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    4.5%
+  </span>
+  <span class="absValue">
+    (1/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/28)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.7%
+  </span>
+  <span class="absValue">
+    (6/90)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.giitotech.product_management.service;
+&nbsp;
+&nbsp;import java.sql.Timestamp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.logging.Logger;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.data.domain.Page;
+&nbsp;import org.springframework.data.domain.Pageable;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import com.giitotech.product_management.dao.CategoryRepository;
+&nbsp;import com.giitotech.product_management.dao.ProductDao;
+&nbsp;import com.giitotech.product_management.dao.ProductRepository;
+&nbsp;import com.giitotech.product_management.dto.ProductForm;
+&nbsp;import com.giitotech.product_management.dto.ProductStockStatus;
+&nbsp;import com.giitotech.product_management.entity.Category;
+&nbsp;import com.giitotech.product_management.entity.Product;
+&nbsp;import com.giitotech.product_management.util.DataTimeUtil;
+&nbsp;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class ProductServiceImpl implements ProductService {
+&nbsp;	private ProductRepository productRepository;
+&nbsp;	private ProductDao productDao;
+&nbsp;	private CategoryRepository categoryRepository;
+&nbsp;	private CategoryService categoryService;
+<b class="fc">&nbsp;	private Logger logger = Logger.getLogger(getClass().getName());</b>
+&nbsp;
+&nbsp;	@Autowired
+&nbsp;	public ProductServiceImpl(
+&nbsp;			ProductRepository productRepository,
+&nbsp;			ProductDao productDao,
+&nbsp;			CategoryRepository categoryRepository,
+<b class="fc">&nbsp;			CategoryService categoryService) {</b>
+<b class="fc">&nbsp;		this.productRepository = productRepository;</b>
+<b class="fc">&nbsp;		this.productDao = productDao;</b>
+<b class="fc">&nbsp;		this.categoryRepository = categoryRepository;</b>
+<b class="fc">&nbsp;		this.categoryService = categoryService;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	@Transactional
+&nbsp;	public Product save(ProductForm productForm) {
+<b class="nc">&nbsp;		Optional&lt;Category&gt; cateogryOpt = categoryRepository.findById(productForm.getCategoryId());</b>
+&nbsp;
+<b class="nc">&nbsp;		Product savedProduct = null;</b>
+<b class="nc">&nbsp;		if (cateogryOpt.isPresent()) {</b>
+&nbsp;			// 結果がある場合の処理
+<b class="nc">&nbsp;			Category cateogry = cateogryOpt.get();</b>
+<b class="nc">&nbsp;			Product product = new Product(productForm.getName(), productForm.getPrice(), productForm.getStock(),</b>
+&nbsp;					cateogry);
+&nbsp;
+&nbsp;			// productForm idがnullじゃなければproductにidをsetする
+<b class="nc">&nbsp;			if (productForm.getId() != null) {</b>
+<b class="nc">&nbsp;				product.setId(productForm.getId());</b>
+&nbsp;			}
+<b class="nc">&nbsp;			Timestamp timestamp = DataTimeUtil.getTimestampInJapanTime();</b>
+&nbsp;
+&nbsp;			// 最新更新日を設定
+<b class="nc">&nbsp;			product.setLastUpdated(timestamp);</b>
+&nbsp;
+<b class="nc">&nbsp;			savedProduct = productRepository.save(product);</b>
+<b class="nc">&nbsp;			logger.info(&quot;Successfully created product: &quot; + productForm.getName());</b>
+&nbsp;		} else {
+&nbsp;			// 結果がない場合の処理
+<b class="nc">&nbsp;			logger.warning(&quot;CategoryIdが見つかりません&quot;);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return savedProduct;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Product findById(Integer id) {
+<b class="nc">&nbsp;		return productRepository.findById(id).orElse(null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	@Transactional
+&nbsp;	public void deleteById(int id) {
+<b class="nc">&nbsp;		productRepository.deleteById(id);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Page&lt;ProductStockStatus&gt; getProductsWithStockStatus(Page&lt;Product&gt; products) {
+&nbsp;
+<b class="nc">&nbsp;		Page&lt;ProductStockStatus&gt; productStockStatuses = products.map(product -&gt; {</b>
+&nbsp;			String stockStatus;
+<b class="nc">&nbsp;			if (product.getStock() == 0) {</b>
+<b class="nc">&nbsp;				stockStatus = &quot;在庫無し&quot;;</b>
+<b class="nc">&nbsp;			} else if (product.getStock() &lt;= 5) {</b>
+<b class="nc">&nbsp;				stockStatus = &quot;残り少ない&quot;;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				stockStatus = &quot;在庫有り&quot;;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			ProductStockStatus productStockStatus = new ProductStockStatus(product.getId(), product.getName(),</b>
+<b class="nc">&nbsp;					product.getCategory().getName(), product.getPrice(), product.getStock(), stockStatus);</b>
+<b class="nc">&nbsp;			return productStockStatus;</b>
+&nbsp;		});
+&nbsp;
+<b class="nc">&nbsp;		return productStockStatuses;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Page&lt;ProductStockStatus&gt; findPaginatedByKeyword(Pageable pageable, String[] keywords) {
+<b class="nc">&nbsp;		Page&lt;Product&gt; products = productDao.findProductByKeyword(pageable, keywords);</b>
+<b class="nc">&nbsp;		return getProductsWithStockStatus(products);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Product findProductByNameAndCategoryName(String name, int categoryId) {
+<b class="nc">&nbsp;		return productDao.findProductByNameAndCategoryName(name, categoryId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public long getCountProducts() {
+<b class="nc">&nbsp;		return productDao.countProducts();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public long getCountOutOfStockProducts() {
+<b class="nc">&nbsp;		return productDao.countOutofStockProducts();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;ProductStockStatus&gt; findSoldOutItems(String sortBy, String sortOrder) {
+<b class="nc">&nbsp;		List&lt;Product&gt; products = productDao.findSoldOutItems(sortBy, sortOrder);</b>
+<b class="nc">&nbsp;		String stockStatus = &quot;在庫無し&quot;;</b>
+<b class="nc">&nbsp;		return getListProductsWithStockStatus(products, stockStatus);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public List&lt;ProductStockStatus&gt; getListProductsWithStockStatus(List&lt;Product&gt; products, String stockStatus) {
+&nbsp;
+<b class="nc">&nbsp;		List&lt;ProductStockStatus&gt; productStockStatuses = products.stream()</b>
+<b class="nc">&nbsp;				.map(product -&gt; {</b>
+<b class="nc">&nbsp;					return new ProductStockStatus(</b>
+<b class="nc">&nbsp;							product.getId(),</b>
+<b class="nc">&nbsp;							product.getName(),</b>
+<b class="nc">&nbsp;							product.getCategory().getName(),</b>
+<b class="nc">&nbsp;							product.getPrice(),</b>
+<b class="nc">&nbsp;							product.getStock(),</b>
+&nbsp;							stockStatus);
+&nbsp;				})
+<b class="nc">&nbsp;				.collect(Collectors.toList());</b>
+&nbsp;
+<b class="nc">&nbsp;		return productStockStatuses;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;ProductStockStatus&gt; findLowInStockItems(String sortBy, String sortOrder) {
+<b class="nc">&nbsp;		List&lt;Product&gt; products = productDao.findLowInStockItems(sortBy, sortOrder);</b>
+<b class="nc">&nbsp;		String stockStatus = &quot;残り少ない&quot;;</b>
+<b class="nc">&nbsp;		return getListProductsWithStockStatus(products, stockStatus);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;ProductStockStatus&gt; findListProductStockStatusByKeywordAndDate(
+&nbsp;			String[] keywords,
+&nbsp;			LocalDate startDate,
+&nbsp;			LocalDate endDate, 
+&nbsp;			String stockType, 
+&nbsp;			String sortBy, 
+&nbsp;			String direction) {
+<b class="nc">&nbsp;		List&lt;Product&gt; products = productDao.findListProductByKeywordAndDate(</b>
+&nbsp;				keywords, 
+&nbsp;				startDate, 
+&nbsp;				endDate, 
+&nbsp;				stockType,
+&nbsp;				sortBy, 
+&nbsp;				direction);
+<b class="nc">&nbsp;		return getProductsWithStockStatus(products);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public List&lt;ProductStockStatus&gt; getProductsWithStockStatus(List&lt;Product&gt; products) {
+&nbsp;
+<b class="nc">&nbsp;		List&lt;ProductStockStatus&gt; productStockStatuses = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (Product product : products) {</b>
+&nbsp;			String stockStatus;
+<b class="nc">&nbsp;			if (product.getStock() == 0) {</b>
+<b class="nc">&nbsp;				stockStatus = &quot;在庫無し&quot;;</b>
+<b class="nc">&nbsp;			} else if (product.getStock() &lt;= 5) {</b>
+<b class="nc">&nbsp;				stockStatus = &quot;残り少ない&quot;;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				stockStatus = &quot;在庫有り&quot;;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			ProductStockStatus productStockStatus = new ProductStockStatus(</b>
+<b class="nc">&nbsp;					product.getId(), </b>
+<b class="nc">&nbsp;					product.getName(),</b>
+<b class="nc">&nbsp;					product.getCategory().getName(), </b>
+<b class="nc">&nbsp;					product.getPrice(), </b>
+<b class="nc">&nbsp;					product.getStock(), </b>
+&nbsp;					stockStatus);
+<b class="nc">&nbsp;			productStockStatuses.add(productStockStatus);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return productStockStatuses;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isProductExist(String productName, int categoryId) {
+<b class="nc">&nbsp;		Product existing = findProductByNameAndCategoryName(</b>
+&nbsp;				productName,
+&nbsp;				categoryId);
+&nbsp;
+<b class="nc">&nbsp;		return existing != null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// categoryId に一致する categoryName を取得
+&nbsp;	public String getCategoryNameById(int categoryId) {
+<b class="nc">&nbsp;		Category category = categoryService.findCategoryById(categoryId);</b>
+<b class="nc">&nbsp;		return category != null ? category.getName() : null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int calculateQuantityDifference(ProductForm productForm, Product preProduct) {
+<b class="nc">&nbsp;		int quantityDifference = 0;</b>
+&nbsp;
+&nbsp;		// もし保存前のProductが存在すれば、在庫差分を計算
+<b class="nc">&nbsp;		if (preProduct != null) {</b>
+<b class="nc">&nbsp;			quantityDifference = productForm.getStock() - preProduct.getStock();</b>
+&nbsp;		} else {
+&nbsp;			// 新規の場合はproductFormの在庫が差分
+<b class="nc">&nbsp;			quantityDifference = productForm.getStock();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return quantityDifference;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String getRedirectPath(ProductForm productForm) {
+<b class="nc">&nbsp;		String path = &quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (productForm.getId() != null) {</b>
+<b class="nc">&nbsp;			path = &quot;redirect:/product/edit&quot;;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			path = &quot;redirect:/product/register&quot;;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return path;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isProductExist(Integer id) {
+<b class="nc">&nbsp;		Product existing = findById(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		return existing != null;</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;	public List&lt;ProductStockStatus&gt; getProductsByFileType(String fileType, String sortBy, String direction) {
+<b class="nc">&nbsp;	    if (&quot;sold_out_items&quot;.equals(fileType)) {</b>
+<b class="nc">&nbsp;	        return findSoldOutItems(sortBy, direction);</b>
+<b class="nc">&nbsp;	    } else if (&quot;low_in_stock_items&quot;.equals(fileType)) {</b>
+<b class="nc">&nbsp;	        return findLowInStockItems(sortBy, direction);</b>
+&nbsp;	    } else {
+<b class="nc">&nbsp;	        throw new IllegalArgumentException(&quot;Invalid fileType: &quot; + fileType);</b>
+&nbsp;	    }
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-18 14:44</div>
+</div>
+</body>
+</html>

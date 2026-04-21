@@ -1,0 +1,211 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > StockHistoryServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.giitotech.product_management.service</a>
+</div>
+
+<h1>Coverage Summary for Class: StockHistoryServiceImpl (com.giitotech.product_management.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StockHistoryServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (4/24)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">StockHistoryServiceImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (4/24)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.giitotech.product_management.service;
+&nbsp;
+&nbsp;import java.sql.Timestamp;
+&nbsp;import java.text.SimpleDateFormat;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import com.giitotech.product_management.dao.StockHistoryDao;
+&nbsp;import com.giitotech.product_management.dao.StockHistoryRepository;
+&nbsp;import com.giitotech.product_management.dto.LatestStockHistory;
+&nbsp;import com.giitotech.product_management.entity.Product;
+&nbsp;import com.giitotech.product_management.entity.StockHistory;
+&nbsp;import com.giitotech.product_management.util.DataTimeUtil;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class StockHistoryServiceImpl implements StockHistoryService {
+&nbsp;	private StockHistoryRepository stockHistoryRepository;
+&nbsp;	private ProductService productService;
+&nbsp;	private StockHistoryDao stockHistoryDao;
+&nbsp;
+&nbsp;	@Autowired
+&nbsp;	public StockHistoryServiceImpl(
+&nbsp;			StockHistoryRepository stockHistoryRepository,
+&nbsp;			ProductService productService,
+<b class="fc">&nbsp;			StockHistoryDao stockHistoryDao) {</b>
+<b class="fc">&nbsp;		this.stockHistoryRepository = stockHistoryRepository;</b>
+<b class="fc">&nbsp;		this.productService = productService;</b>
+<b class="fc">&nbsp;		this.stockHistoryDao = stockHistoryDao;</b>
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void save(int quantityDifference, Product savedProduct) {
+<b class="nc">&nbsp;		StockHistory stockHistory = new StockHistory(quantityDifference, savedProduct);</b>
+&nbsp;
+&nbsp;		// 日付を設定
+<b class="nc">&nbsp;		Timestamp timestamp = DataTimeUtil.getTimestampInJapanTime();</b>
+&nbsp;
+<b class="nc">&nbsp;		stockHistory.setTimestamp(timestamp);</b>
+&nbsp;
+<b class="nc">&nbsp;		stockHistoryRepository.save(stockHistory);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;LatestStockHistory&gt; getLatestStockHistories() {
+<b class="nc">&nbsp;		int showCount = 15;</b>
+<b class="nc">&nbsp;	    List&lt;LatestStockHistory&gt; list = stockHistoryDao.findLatestStockHistories(showCount);</b>
+<b class="nc">&nbsp;	    SimpleDateFormat formatter = new SimpleDateFormat(&quot;yyyy/MM/dd HH:mm&quot;);</b>
+&nbsp;	    
+<b class="nc">&nbsp;	    for (LatestStockHistory dto : list) {</b>
+&nbsp;	        // Timestampがnullでなければ、指定フォーマットに変換
+<b class="nc">&nbsp;	        if (dto.getLatestTimestamp() != null) {</b>
+<b class="nc">&nbsp;	            String formatted = formatter.format(dto.getLatestTimestamp());</b>
+<b class="nc">&nbsp;	            dto.setFormattedLatestTimestamp(formatted);</b>
+&nbsp;	        }
+&nbsp;	        
+&nbsp;			String stockStatus;
+&nbsp;
+&nbsp;			// 在庫数に応じてステータスを設定
+<b class="nc">&nbsp;			if(dto.getChangeQuantity() == 0) {</b>
+<b class="nc">&nbsp;				stockStatus = &quot;新規&quot;;</b>
+<b class="nc">&nbsp;			} else if (dto.getHistoryStock() == 0) {</b>
+<b class="nc">&nbsp;				stockStatus = &quot;在庫無し&quot;;</b>
+<b class="nc">&nbsp;			} else if (dto.getHistoryStock() &lt;= 5) {</b>
+<b class="nc">&nbsp;				stockStatus = &quot;残り少ない&quot;;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				stockStatus = &quot;在庫有り&quot;;</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			// DTOにステータスを設定
+<b class="nc">&nbsp;			dto.setStockStatus(stockStatus);</b>
+&nbsp;	    }
+<b class="nc">&nbsp;	    return list;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-18 14:44</div>
+</div>
+</body>
+</html>

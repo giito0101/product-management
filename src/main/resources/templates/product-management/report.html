@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Daisuke Itoga">
+    <title>商品管理システム試作品 - レポート画面</title>
+    <div th:replace="product-management/fragments/head.html"></div>
+    <link th:href="@{/css/product-management/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/product-management/register.css}" rel="stylesheet">
+</head>
+
+<body>
+    <div th:replace="product-management/fragments/symbols :: symbols"></div>
+
+    <div th:replace="product-management/fragments/header.html"></div>
+
+    <div class="container-1 d-flex">
+        <div th:replace="product-management/fragments/dashboard.html">
+        </div>
+        <main class="container-fluid col-md-10 justify-content-center mt-4">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="bg-register rounded-container p-sm-4 p-0 col-12 col-md-9 col-lg-6 flex-column">
+                    <h2 class="mb-3 d-flex align-items-center">
+                        <svg class="bi-big">
+                            <use xlink:href="#report" />
+                        </svg>
+                        レポート種類
+                    </h2>
+                    <div class="col-8 px-5 pt-5">
+                        <a th:href="@{/product/soldOutItems}" class="link-primary text-decoration-none text">売り切れ商品</a>
+                    </div>
+                    <div class="col-8 px-5 pt-3 pb-5">
+                        <a th:href="@{/product/lowInStockItems}" class="link-primary text-decoration-none">在庫が少ない商品</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+</body>
+
+</html>

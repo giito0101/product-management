@@ -1,0 +1,25 @@
+<header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow d-flex align-items-cente">
+    <a class="d-flex align-items-center gap-2 text-decoration-none text-white" href="#">
+        <img th:src="@{/asset/logo.png}" alt="ロゴ" width="60" height="60">
+        <span class="fs-6">会社名</span>
+    </a>
+
+    <div th:if="${session.user != null}" class="d-flex align-items-center gap-3 text-white ms-auto pe-3">
+        <span th:text="${headerUserInfo.roleDisplayName}">役職</span>
+        <span th:text="${headerUserInfo.userName}">ユーザー名</span>
+    </div>
+
+    <ul class="navbar-nav flex-row d-md-none">
+        <li class="nav-item text-nowrap">
+            <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <svg class="bi" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M2 2.5A.5.5 0 0 1 2.5 2h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 5A.5.5 0 0 1 2.5 7h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+                </svg>
+            </button>
+        </li>
+    </ul>
+</header>

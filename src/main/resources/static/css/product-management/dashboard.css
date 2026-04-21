@@ -1,0 +1,22 @@
+@charset "utf-8";
+.bi {
+  width: 24px;
+  height: 24px;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar .nav-link {
+  font-size: .875rem;
+  font-weight: 500;
+}
+
+.sidebar .nav-link {
+  color: #454545;
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+}

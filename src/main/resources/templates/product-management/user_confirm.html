@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="Daisuke Itoga">
+	    <title th:text="|商品管理システム試作品 - ${title}確認画面|"></title>
+        <div th:replace="product-management/fragments/head.html"></div>
+        <link th:href="@{/css/product-management/dashboard.css}" rel="stylesheet">
+        <link th:href="@{/css/product-management/register.css}" rel="stylesheet">
+    </head>
+</head>
+
+<body>
+    <div th:replace="product-management/fragments/symbols :: symbols"></div>
+
+    <div th:replace="product-management/fragments/header.html"></div>
+
+    <div class="container-1 d-flex">
+        <div th:replace="product-management/fragments/dashboard.html">
+        </div>
+        <main class="container-fluid col-md-10 justify-content-center mt-4">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="bg-register rounded-container p-sm-4 p-0 col-12 col-md-9 col-lg-9 flex-column">
+                    <form class="row g-3" th:object="${userForm}" th:action="@{/user/save}" method="post">
+                        <h2 class="mb-3 d-flex justify-content-center align-items-center" th:text=${title}>
+                        </h2>
+                        <div class="col-12 d-flex">
+                            <label for="label01" class="form-label col-2 text-end pe-2 pe-md-4">ユーザー名</label>
+                            <div class="col-10 ps-4" th:text="*{userName}"></div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <label for="label02" class="form-label col-2 text-end pe-2 pe-md-4">パスワード</label>
+                            <div class="col-10 ps-4">******</div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <label for="label03" class="form-label col-2 text-end pe-2 pe-md-4">名字</label>
+                            <div class="col-4 col-md-3 ps-4" th:text="*{lastName}"></div>
+                            <label for="label04" class="form-label col-2 text-end pe-2 pe-md-4">名前</label>
+                            <div class="col-4 col-md-3 ps-4" th:text="*{firstName}"></div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <label for="label05" class="form-label col-2 text-end pe-2 pe-md-4">役職</label>
+                            <div class="col-10 ps-4" th:text="*{roleDisplayName}"></div>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <label for="label06" class="form-label col-2 text-end pe-2 pe-md-4">メール</label>
+                            <div class="col-10 ps-4" th:text="*{email}"></div>
+                        </div>
+                        <div class="text-center col-12">
+                            <!-- 登録ボタン（POSTで送信） -->
+                            <button type="submit" class="col-4 col-md-3 btn btn-outline-secondary me-5">登録</button>
+                            
+                            <a th:if="*{id != null}" th:href="@{/user/edit(userId=*{id})}"
+                               class="col-4 col-md-3 btn btn-outline-secondary">
+                            <!-- idが存在する場合: 編集画面へ -->
+                                キャンセル
+                            </a>
+                    
+                            <a th:if="*{id == null}" th:href="@{/user/register}"
+                               class="col-4 col-md-3 btn btn-outline-secondary">
+                            <!-- idが存在しない場合: 登録画面へ -->
+                                キャンセル
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+    </div>
+</body>
+
+</html>

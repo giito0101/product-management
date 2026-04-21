@@ -1,0 +1,200 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ProductForm</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.giitotech.product_management.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductForm (com.giitotech.product_management.dto)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductForm</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.giitotech.product_management.dto;
+&nbsp;
+&nbsp;import jakarta.validation.constraints.Max;
+&nbsp;import jakarta.validation.constraints.Min;
+&nbsp;import jakarta.validation.constraints.NotNull;
+&nbsp;import jakarta.validation.constraints.Size;
+&nbsp;
+&nbsp;public class ProductForm {
+&nbsp;
+&nbsp;	Integer id;
+&nbsp;	
+&nbsp;	@NotNull(message = &quot;商品名を入力してください&quot;)
+&nbsp;	@Size(min=2, max=100, message=&quot;１文字より多く文字を入力してください&quot;)
+&nbsp;	String name;
+&nbsp;	
+&nbsp;	@NotNull(message = &quot;カテゴリを選択してください&quot;)
+&nbsp;	@Min(value=0, message=&quot;不正なカテゴリが設定されています&quot;)
+&nbsp;	Integer categoryId;
+&nbsp;
+&nbsp;	@Max(value=1000000, message = &quot;在庫数が不正です&quot;)
+&nbsp;	@Min(value=0, message = &quot;在庫数が不正です&quot;)
+&nbsp;	int stock;
+&nbsp;	
+&nbsp;	@Max(value=1000000000, message = &quot;金額が不正です&quot;)
+&nbsp;	@Min(value=10, message = &quot;金額が不正です&quot;)
+&nbsp;	int price;
+&nbsp;	
+&nbsp;	String categoryName;
+&nbsp;	
+<b class="nc">&nbsp;	public ProductForm() {</b>
+&nbsp;		
+&nbsp;	}
+&nbsp;
+&nbsp;	public ProductForm(
+&nbsp;		Integer id,
+&nbsp;		String name,
+&nbsp;		Integer categoryId,
+&nbsp;		int stock,
+&nbsp;		int price
+<b class="nc">&nbsp;		) {</b>
+<b class="nc">&nbsp;		this.id = id;</b>
+<b class="nc">&nbsp;		this.name = name;</b>
+<b class="nc">&nbsp;		this.categoryId = categoryId;</b>
+<b class="nc">&nbsp;		this.stock = stock;</b>
+<b class="nc">&nbsp;		this.price = price;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Integer getId() {
+<b class="nc">&nbsp;		return id;</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;	public void setId(Integer id) {
+<b class="nc">&nbsp;		this.id = id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String getName() {
+<b class="nc">&nbsp;		return name;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	
+&nbsp;	public void setName(String name) {
+<b class="nc">&nbsp;		this.name = name;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Integer getCategoryId() {
+<b class="nc">&nbsp;		return categoryId;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setCategoryId(Integer categoryId) {
+<b class="nc">&nbsp;		this.categoryId = categoryId;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int getStock() {
+<b class="nc">&nbsp;		return stock;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setStock(int stock) {
+<b class="nc">&nbsp;		this.stock = stock;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int getPrice() {
+<b class="nc">&nbsp;		return price;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setPrice(int price) {
+<b class="nc">&nbsp;		this.price = price;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String getCategoryName() {
+<b class="nc">&nbsp;		return categoryName;</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;	public void setCategoryName(String categoryName) {
+<b class="nc">&nbsp;		this.categoryName = categoryName;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-18 14:44</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+.bg-light {
+    background-color: none;
+}
+
+@media (min-width: 576px) {
+    .bg-register {
+        --bs-bg-opacity: 1;
+        background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+    }
+}

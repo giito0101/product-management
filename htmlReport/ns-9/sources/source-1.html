@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DataAccessExceptionHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.giitotech.product_management.exception</a>
+</div>
+
+<h1>Coverage Summary for Class: DataAccessExceptionHandler (com.giitotech.product_management.exception)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DataAccessExceptionHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    10%
+  </span>
+  <span class="absValue">
+    (2/20)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DataAccessExceptionHandler$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    10%
+  </span>
+  <span class="absValue">
+    (2/20)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.giitotech.product_management.exception;
+&nbsp;
+&nbsp;import org.hibernate.exception.JDBCConnectionException;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.dao.DataAccessException;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.ControllerAdvice;
+&nbsp;import org.springframework.web.bind.annotation.ExceptionHandler;
+&nbsp;
+&nbsp;import jakarta.persistence.PersistenceException;
+&nbsp;import jakarta.persistence.QueryTimeoutException;
+&nbsp;import jakarta.validation.ConstraintViolationException;
+&nbsp;
+&nbsp;@ControllerAdvice
+<b class="fc">&nbsp;public class DataAccessExceptionHandler {</b>
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(DataAccessExceptionHandler.class);</b>
+&nbsp;
+&nbsp;    // データベース接続に関する例外（JDBC接続エラーなど）
+&nbsp;    @ExceptionHandler(JDBCConnectionException.class)
+&nbsp;    public ResponseEntity&lt;String&gt; handleDatabaseConnectionException(JDBCConnectionException exc) {
+<b class="nc">&nbsp;        String errorMessage = &quot;Unable to connect to the database. Please try again later.&quot;;</b>
+<b class="nc">&nbsp;        logger.error(errorMessage, exc);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // JPAの一般的なエラー
+&nbsp;    @ExceptionHandler(PersistenceException.class)
+&nbsp;    public ResponseEntity&lt;String&gt; handlePersistenceException(PersistenceException exc) {
+<b class="nc">&nbsp;        String errorMessage = &quot;An error occurred while accessing the database. Please try again later.&quot;;</b>
+<b class="nc">&nbsp;        logger.error(errorMessage, exc);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // クエリタイムアウト
+&nbsp;    @ExceptionHandler(QueryTimeoutException.class)
+&nbsp;    public ResponseEntity&lt;String&gt; handleQueryTimeoutException(QueryTimeoutException exc) {
+<b class="nc">&nbsp;        String errorMessage = &quot;The query has timed out. Please try again later.&quot;;</b>
+<b class="nc">&nbsp;        logger.error(errorMessage, exc);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(errorMessage, HttpStatus.REQUEST_TIMEOUT);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // データアクセスエラー（Spring Data JPA で発生する一般的なエラー）
+&nbsp;    @ExceptionHandler(DataAccessException.class)
+&nbsp;    public ResponseEntity&lt;String&gt; handleDataAccessException(DataAccessException exc) {
+<b class="nc">&nbsp;        String errorMessage = &quot;A database error occurred. Please try again later.&quot;;</b>
+<b class="nc">&nbsp;        logger.error(errorMessage, exc);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // 制約違反エラー（例: UNIQUE制約、NOT NULL制約など）
+&nbsp;    @ExceptionHandler(ConstraintViolationException.class)
+&nbsp;    public ResponseEntity&lt;String&gt; handleConstraintViolationException(ConstraintViolationException exc) {
+<b class="nc">&nbsp;        String errorMessage = &quot;A database constraint was violated. Please check the data and try again.&quot;;</b>
+<b class="nc">&nbsp;        logger.error(errorMessage, exc);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(errorMessage, HttpStatus.BAD_REQUEST);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // その他のJPAシステムエラー（JpaSystemExceptionなど）
+&nbsp;    @ExceptionHandler(org.springframework.orm.jpa.JpaSystemException.class)
+&nbsp;    public ResponseEntity&lt;String&gt; handleJpaSystemException(org.springframework.orm.jpa.JpaSystemException exc) {
+<b class="nc">&nbsp;        String errorMessage = &quot;A system error occurred while accessing the database.&quot;;</b>
+<b class="nc">&nbsp;        logger.error(errorMessage, exc);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-18 14:44</div>
+</div>
+</body>
+</html>

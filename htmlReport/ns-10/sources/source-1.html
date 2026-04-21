@@ -1,0 +1,88 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.giitotech.product_management.mapper</a>
+</div>
+
+<h1>Coverage Summary for Class: UserMapper (com.giitotech.product_management.mapper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">UserMapper</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.giitotech.product_management.mapper;
+&nbsp;
+&nbsp;import org.apache.ibatis.annotations.Mapper;
+&nbsp;import org.apache.ibatis.annotations.Param;
+&nbsp;import com.giitotech.product_management.dto.UserRolesDto;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Mapper
+&nbsp;public interface UserMapper {
+&nbsp;
+&nbsp;    List&lt;UserRolesDto&gt; findUserByKeywords(
+&nbsp;            @Param(&quot;keywords&quot;) List&lt;String&gt; keywords,
+&nbsp;            @Param(&quot;sortBy&quot;) String sortBy,
+&nbsp;            @Param(&quot;direction&quot;) String direction,
+&nbsp;            @Param(&quot;offset&quot;) int offset,
+&nbsp;            @Param(&quot;limit&quot;) int limit
+&nbsp;    );
+&nbsp;
+&nbsp;    int countUserByKeywords(@Param(&quot;keywords&quot;) List&lt;String&gt; keywords);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-18 14:44</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Daisuke Itoga">
+    <title>商品管理システム試作品 - プロダクトリスト画面</title>
+    <div th:replace="product-management/fragments/head.html"></div>
+    <link th:href="@{/css/product-management/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/product-management/list.css}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- モーダルの定義 -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">確認</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                </div>
+                <div class="modal-body">
+                    商品を削除しますが、よろしいですか？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <a id="confirmDeleteButton" class="btn btn-danger" href="#">削除する</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="product-management/fragments/symbols :: symbols"></div>
+
+    <div th:replace="product-management/fragments/header.html"></div>
+
+    <div class="container-1 d-flex">
+        <div th:replace="product-management/fragments/dashboard.html">
+        </div>
+        <main class="container-fluid col-md-10 justify-content-center mt-4">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="rounded-container p-sm-4 p-0 col-11 flex-column">
+	                <h2 class="mb-3 d-flex align-items-center" th:if="${isUserDelete}">
+	                    <span class="badge bg-success mb-3">削除が完了しました</span>
+	                </h2>
+                    <h2 class="mb-3 d-flex align-items-center">
+                        <svg class="bi-big">
+                            <use xlink:href="#list" />
+                        </svg>
+                        商品一覧
+                    </h2>
+                    <form class="d-flex mb-3 form-search row" role="search" th:action="@{/product/search}" method="get"
+                        th:object="${productSearchForm}">
+                        <span th:if="${#fields.hasErrors('search')}" th:errors="*{search}" class="text-danger"></span>
+                        <div>
+                            <input type="hidden" name="sortBy" th:field=*{sortBy} />
+                            <input type="hidden" name="direction" th:field=*{direction} />
+                            <input class="form-control-sm me-3 col-10 col-md-9  col-lg-7 rounded" type="search"
+                                placeholder="商品名、カテゴリをフィルタリング" aria-label=".form-control-sm Search" th:field=*{search}>
+                            <button class="rounded bg-light" type="submit">
+                                <svg class="bi-search">
+                                    <use xlink:href="#search" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="table-responsive rounded-table">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">
+                                        <a th:href="@{/product/showList(sortBy='name', direction=*{sortBy == 'name' && direction == 'asc' ? 'desc' : 'asc'}, keyword=${productSearchForm.search != null ? productSearchForm.search : ''})}"
+                                            class="link-primary text-decoration-none">
+                                            商品名
+                                            <span th:if="*{sortBy == 'name'}"
+                                                th:text="*{direction == 'asc' ? '▲' : '▼'}"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a th:href="@{/product/showList(sortBy='category.name', direction=*{sortBy == 'category.name' && direction == 'asc' ? 'desc' : 'asc'}, keyword=${productSearchForm.search != null ? productSearchForm.search : ''})}"
+                                            class="link-primary text-decoration-none">
+                                            カテゴリ
+                                            <span th:if="*{sortBy == 'category.name'}"
+                                                th:text="*{direction == 'asc' ? '▲' : '▼'}"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a th:href="@{/product/showList(sortBy='stock', direction=*{sortBy == 'stock' && direction == 'asc' ? 'desc' : 'asc'}, keyword=${productSearchForm.search != null ? productSearchForm.search : ''})}"
+                                            class="link-primary text-decoration-none">
+                                            在庫数
+                                            <span th:if="*{sortBy == 'stock'}"
+                                                th:text="*{direction == 'asc' ? '▲' : '▼'}"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a th:href="@{/product/showList(sortBy='price', direction=*{sortBy == 'price' && direction == 'asc' ? 'desc' : 'asc'}, keyword=${productSearchForm.search != null ? productSearchForm.search : ''})}"
+                                            class="link-primary text-decoration-none">
+                                            価格
+                                            <span th:if="*{sortBy == 'price'}"
+                                                th:text="*{direction == 'asc' ? '▲' : '▼'}"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="productWithStatus : ${productsWithStatus}">
+                                    <td>
+                                        <span class="badge text-bg-success rounded-pill badge-custom"
+                                            th:text="${productWithStatus.stockStatus}">在庫有り</span>
+                                    </td>
+                                    <td th:text="${productWithStatus.name}"></td>
+                                    <td th:text="${productWithStatus.categoryName}"></td>
+                                    <td th:text="${productWithStatus.stock}"></td>
+                                    <td th:text="${productWithStatus.price}" data-price="true"></td>
+                                    <td>
+                                        <a th:href="@{/product/edit(productId=${productWithStatus.id})}">
+                                            <svg class="bi">
+                                                <use xlink:href="#edit" />
+                                            </svg>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/product/delete(productId=${productWithStatus.id}, path=list)}"
+                                            class="delete-link">
+                                            <svg class="bi">
+                                                <use xlink:href="#delete" />
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bd-example-snippet bd-code-snippet　text-center">
+                        <div class="bd-example m-0 border-0">
+                            <nav aria-label="Standard pagination example">
+                                <ul class="pagination justify-content-center mb-0 mt-3">
+                                    <!-- 最初のページへのリンク -->
+                                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/product/showList(page=0, size=${pageSize})}">&laquo;&laquo;</a>
+                                    </li>
+
+                                    <!-- 前のページへのリンク -->
+                                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/product/showList(page=${currentPage - 1}, size=${pageSize})}" aria-label="前のページ">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                
+                                
+                                    <!-- 前方の省略記号 -->
+                                    <li class="page-item" th:if="${currentPage > 1}">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                
+                                    <!-- 現在のページとその前後のページ -->
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(currentPage - 1, currentPage + 1)}" th:if="${i >= 0 and i < totalPages}" th:classappend="${i == currentPage} ? ' active'">
+                                        <a class="page-link" th:href="@{/product/showList(page=${i}, size=${pageSize})}" th:text="${i + 1}">1</a>
+                                    </li>
+                                
+                                    <!-- 後方の省略記号 -->
+                                    <li class="page-item" th:if="${currentPage < totalPages - 2}">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                                                
+                                    <!-- 次のページへのリンク -->
+                                    <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/product/showList(page=${currentPage + 1}, size=${pageSize})}" aria-label="次のページ">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- 最後のページへのリンク -->
+                                    <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/product/showList(page=${totalPages - 1}, size=${pageSize})}">&raquo;&raquo;</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- スクリプトの読み込み -->
+    <script th:src="@{/js/badge_transform.js}" defer></script>
+    <script th:src="@{/js/format_number.js}" defer></script>
+    <script th:src="@{/js/modal.js}" defer></script>
+</body>
+
+</html>
