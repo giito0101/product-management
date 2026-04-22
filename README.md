@@ -78,14 +78,44 @@ DAO / Repository / Mapperはデータベースアクセスを担当します。�
 SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
 ```
 
+ログイン確認には次のユーザーを使用できます。
+
+```text
+ユーザー名: tanaka
+パスワード: password1
+```
+
 ## データベース作成SQL
 
 ローカルMySQL用のテーブル作成SQLは `sql_script/create.sql` に配置しています。
 
-## テスト実行
+## テスト実行の事前準備
 
-テストは Java 21 と `test` プロファイルを指定して実行します。
+テストは Java 21 で実行します。Java 21 を使用するために、事前に次の環境変数を設定してください。
 
 ```bash
-JAVA_HOME=/opt/homebrew/opt/openjdk@21 PATH=/opt/homebrew/opt/openjdk@21/bin:$PATH SPRING_PROFILES_ACTIVE=test ./mvnw test
+export JAVA_HOME=/opt/homebrew/opt/openjdk@21
+export PATH="$JAVA_HOME/bin:$PATH"
+```
+
+設定後、Java のバージョンを確認します。
+
+```bash
+java -version
+```
+
+`21` 系のバージョンが表示されれば準備完了です。
+
+## テスト実行
+
+`test` プロファイルを指定してテストを実行します。
+
+```bash
+SPRING_PROFILES_ACTIVE=test ./mvnw test
+```
+
+ビルドまで確認する場合は次のコマンドを実行します。
+
+```bash
+SPRING_PROFILES_ACTIVE=test ./mvnw package
 ```
