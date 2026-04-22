@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.ModelAndViewAssert;
@@ -43,6 +44,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 @SpringBootTest
+@TestPropertySource("/application-test.properties")
 @AutoConfigureMockMvc
 @Sql(
         scripts = "/testdata/integration/setup.sql",
@@ -612,7 +614,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "tanaka", roles = "ADMIN")
     void shouldReturnErrorWhenUserIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/user/delete")
                         .param("userId", "30"))
@@ -622,7 +624,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "tanaka", roles = "ADMIN")
     void shouldReturnErrorWhenUserIdIsZero() throws Exception {
         mockMvc.perform(get("/user/delete")
                         .param("userId", "0"))
@@ -632,7 +634,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "tanaka", roles = "ADMIN")
     void shouldDeleteUserWhenUserIdExists() throws Exception {
         // 削除前にユーザーが存在することを確認
         assertThat(userRepository.existsById(29)).isTrue();

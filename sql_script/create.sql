@@ -1,3 +1,11 @@
+-- Drop user first if they exist
+-- Now create user with prop privileges
+DROP USER if exists 'springdemo'@'%' ;
+
+CREATE USER 'springdemo'@'%' IDENTIFIED BY 'springdemo';
+
+GRANT ALL PRIVILEGES ON * . * TO 'springdemo'@'%';
+
 -- データベース作成（日本語対応）
 CREATE DATABASE IF NOT EXISTS `product_management` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `product_management`;
